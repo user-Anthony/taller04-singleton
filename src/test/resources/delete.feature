@@ -1,4 +1,5 @@
-Feature: Eliminar y editar tarea
+@delete
+Feature: Eliminar
   Background:
     Given agregamos una tarea
     And ingresamos titulo de tarea "Tarea 1"

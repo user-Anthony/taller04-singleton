@@ -28,3 +28,34 @@ configurations {
         extendsFrom testImplementation
     }
 }
+
+task cucumber() {
+    dependsOn assemble, testClasses
+    doLast {
+        javaexec {
+            main = "io.cucumber.core.cli.Main"
+            classpath = configurations.cucumberRuntime + sourceSets.main.output + sourceSets.test.output
+            args = [
+                    '--plugin', 'pretty',
+                    '--plugin', 'html:target/cucumber-report.html',
+                    '--plugin', 'json:target/cucumber-report.json',
+                    '--glue', 'runner', // donde estarán mis steps
+                    'src/test/resources',
+                    '--threads', '1',  // ejecucion paralela
+                    '--tags'] + [testSuite] // donde estarán mis archivos con extensión .feature
+        }
+    }
+}
+
+// gradle cucumber -PtestSuite="@Contact"
+// gradle report
+// gradle cucumber report -PtestSuite="@Contact"
+
+task report() {
+    doLast {
+        javaexec {
+            main = "util.GenerateReport"
+            classpath = sourceSets.test.runtimeClasspath
+        }
+    }
+}
